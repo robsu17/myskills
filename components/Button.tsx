@@ -1,6 +1,12 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 
-export function Button({addSkills, skillInput}) {
+interface PropsButtonType {
+    addSkills: () => void
+    skillInput: string
+    title: string
+}
+
+export function Button({ title, addSkills, skillInput}: PropsButtonType) {
     return (
         <TouchableOpacity 
             style={[styles.button, {opacity: skillInput.length > 0 ? 1 : .7}]}
@@ -8,7 +14,7 @@ export function Button({addSkills, skillInput}) {
             onPress={addSkills}
             disabled={skillInput.length == 0}
         >
-            <Text style={styles.buttonText}>Add</Text>
+            <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
     )
 }

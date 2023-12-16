@@ -12,14 +12,29 @@ import {
 import { Button } from './components/Button';
 import { SkillCard } from './components/Skillcard';
 
-export default function App() {
-  const [skills, setSkills] = useState([])
-  const [skillInput, setSkillInput] = useState('')
-  const [greeting, setGreeting] = useState('')
+export interface SkillData {
+  id: string
+  name: string
+  date?: Date
+}
 
-  function addSkills() {
-    setSkills([...skills, skillInput])
+export default function App() {
+  const [skills, setSkills] = useState<SkillData[]>([])
+  const [skillInput, setSkillInput] = useState<string>('')
+  const [greeting, setGreeting] = useState<string>('')
+
+  function handleAddNewSkill() {
+    const data = {
+      id: String(new Date().getTime()),
+      name: skillInput
+    }
+
+    setSkills([...skills, data])
     setSkillInput('')
+  }
+
+  function handleRemoveSkill(id: string) {
+    setSkills(skills.filter((skill) => skill.id !== id))
   }
 
   useEffect(() => {
@@ -52,7 +67,8 @@ export default function App() {
       />
 
       <Button 
-        addSkills={addSkills} 
+        title='Add'
+        addSkills={handleAddNewSkill} 
         skillInput={skillInput}
       />
 
@@ -60,11 +76,12 @@ export default function App() {
         My Skills
       </Text>
 
-      <FlatList 
-        keyExtractor={item => item}
+      <FlatList
+        showsHorizontalScrollIndicator={false} 
+        keyExtractor={item => item.id}
         data={skills}
         renderItem={({ item }) => {
-          return <SkillCard skill={item} />
+          return <SkillCard removeSkill={handleRemoveSkill} skill={item} />
         }}
       />
      
